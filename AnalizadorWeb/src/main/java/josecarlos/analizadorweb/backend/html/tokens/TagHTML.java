@@ -1,4 +1,4 @@
-package josecarlos.analizadorweb.backend.analizadores.html;
+package josecarlos.analizadorweb.backend.html.tokens;
 
 /**
  *
