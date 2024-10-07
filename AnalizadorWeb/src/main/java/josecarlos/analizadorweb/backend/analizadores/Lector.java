@@ -1,10 +1,11 @@
 package josecarlos.analizadorweb.backend.analizadores;
 
-import java.awt.Point;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import josecarlos.analizadorweb.backend.Language;
+import static josecarlos.analizadorweb.backend.Language.css;
+import static josecarlos.analizadorweb.backend.Language.html;
+import static josecarlos.analizadorweb.backend.Language.js;
+import josecarlos.analizadorweb.backend.html.tokens.TokenType;
 import josecarlos.analizadorweb.backend.tokens.Token;
 
 /**
@@ -12,20 +13,28 @@ import josecarlos.analizadorweb.backend.tokens.Token;
  * @author emahch
  */
 public class Lector {
-    
+
     private Index currentIndex;
     private String inputText;
-    private Position currentPosition;
-    private int bookmark;
-    private int bookmarkColumn;
-    private List<Token> tokens;
-    
+    private TokenList tokens;
+
+    private StateAnalizer stateAnalizer;
     private HtmlAnalizer htmlAnalizer;
     private JsAnalizer jsAnalizer;
     private CssAnalizer cssAnalizer;
 
     private Analizer currentAnalizer;
     private Language currentLanguage;
+
+    public Lector(String inputText) {
+        this.inputText = inputText;
+        this.tokens = new TokenList();
+        this.stateAnalizer = new StateAnalizer(inputText, currentIndex, tokens);
+        this.htmlAnalizer = new HtmlAnalizer(inputText, currentIndex, tokens);
+        this.jsAnalizer = new JsAnalizer(inputText, currentIndex, tokens);
+        this.cssAnalizer = new CssAnalizer(inputText, currentIndex, tokens);
+        this.currentLanguage = Language.NO_SPECIFIED;
+    }
     
     protected char charActual() {
         if (currentIndex.get() >= inputText.length()) {
@@ -34,76 +43,59 @@ public class Lector {
         return inputText.charAt(currentIndex.get());
     }
 
-    protected void nextLine() {
-        currentIndex.next();
-        currentPosition.setColumn(0);
-    }
-
-    protected void next() {
-        currentIndex.next();
-        currentPosition.nextColumn();
-    }
-    
-    private void setBookmark() {
-        this.bookmark = currentIndex.get();
-        this.bookmarkColumn = currentPosition.getColumn();
-    }
-
-    private void back() {
-        this.currentIndex.set(bookmark);
-        this.currentPosition.setColumn(bookmarkColumn);
-    }
-
     /**
-     * Metodo encargado de analize todo el texto y regresar una lista de lineas con tokens
+     * Metodo encargado de analizar todo el texto y regresar una lista con todos los tokens
      *
      * @return lista de lineas
      */
-    public List<Token> generarTokens() {
-        tokens = new ArrayList<>();
-
+    public TokenList generarTokens() {
         while (currentIndex.get() < inputText.length()) {
             char currentChar = charActual();
 
             if (currentChar == '>') {
-                setBookmark();
-                Optional<Token> posibleNewLanguage = analize(currentIndex);
-                if (posibleNewLanguage.isPresent()) {
-                    tokens.add(posibleNewLanguage.get());
-                } else {
-                    back();
-                }
+                stateAnalizer.analize();
+                currentLanguage = stateAnalizer.getCurrentLanguage();
+                changeActiveAnalizer();
             }
             currentChar = charActual();
 
-            if (currentLanguage.equals(Language.NO_ESPECIFIED)) {
-                next();
-            } else {
+            if (!currentLanguage.equals(Language.NO_SPECIFIED)) {
                 if (Character.isWhitespace(currentChar)) {
-                    next();
+                    Token token = new Token(" ", " ", TokenType.WHITE_SPACE, " ", currentLanguage);
+                    tokens.addToken(token);
+                    currentIndex.next();
                 } else if (currentChar == '\n') {
-                    nextLine();
+                    optimizeJumpLines();
                 } else {
-                    setBookmark();
-                    Optional<Token> posibleToken = currentAnalizer.analize(currentIndex);
-                    if (posibleToken.isPresent()) {
-                        currentIndex = currentAnalizer.getCurrentIndex();
-                        Token token = posibleToken.get();
-                        token.SetLocation(currentLine, currentColumn);
-                        tokens.add(token);
-                    } else {
-                        back();
-                        tokens.add(analizeErrorToken());
-                    }
+                    currentAnalizer.analize();
                 }
-
+            } else {
+                System.out.println("No language specified");
             }
         }
+        return this.tokens;
+    }
 
-        for (Token token : tokens) {
-            System.out.println(token.getToken() + token.getRegularExpresion());
+    private void optimizeJumpLines() {
+        char currentChar = charActual();
+
+        while (currentChar == '\n') {
+            currentIndex.next();
         }
-
-        return tokens;
+        Token token = new Token("\n", "\n", TokenType.JUMP_LINE, "\\n", currentLanguage);
+        tokens.addToken(token);
+    }
+    
+    private void changeActiveAnalizer() {
+        switch (currentLanguage) {
+            case css ->
+                currentAnalizer = cssAnalizer;
+            case html ->
+                currentAnalizer = htmlAnalizer;
+            case js ->
+                currentAnalizer = jsAnalizer;
+            default ->
+                currentAnalizer = null;
+        }
     }
 }

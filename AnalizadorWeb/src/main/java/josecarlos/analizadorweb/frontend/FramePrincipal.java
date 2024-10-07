@@ -1,11 +1,10 @@
 package josecarlos.analizadorweb.frontend;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.swing.JFrame;
-import josecarlos.analizadorweb.archivos.ExportFile;
-import josecarlos.analizadorweb.backend.analizadores.StateAnalizer;
+import josecarlos.analizadorweb.backend.analizadores.Lector;
+import josecarlos.analizadorweb.backend.analizadores.TokenList;
 import josecarlos.analizadorweb.backend.tokens.Token;
 
 /**
@@ -14,7 +13,7 @@ import josecarlos.analizadorweb.backend.tokens.Token;
  */
 public class FramePrincipal extends javax.swing.JFrame {
 
-    private StateAnalizer analizador;
+    private Lector lector;
     
     /**
      * Creates new form FramePrincipal
@@ -156,8 +155,13 @@ public class FramePrincipal extends javax.swing.JFrame {
         if (texto.isEmpty()) {
             return;
         }
-        analizador = new StateAnalizer(textoEntrada.getText());
-        analizador.generarTokens();
+        
+        lector = new Lector(textoEntrada.getText());
+        TokenList tokenList = lector.generarTokens();
+        List<Token> list = tokenList.getTokens();
+        for (Token token : list) {
+            System.out.println("->"+token.getToken() +" >"+ token.getType() + " >" + token.getLanguage());
+        }
         
 //        ExportFile exportFile = new ExportFile();
 //        exportFile.selectPath();

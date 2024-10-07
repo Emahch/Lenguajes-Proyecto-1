@@ -16,8 +16,9 @@ public class Token {
     private String regularExpresion;
     private Point location;
 
-    public Token(String token, String traduction, TokenType type, String regularExpresion) {
+    public Token(String token, String traduction, TokenType type, String regularExpresion, Language language) {
         this.token = token;
+        this.language = language;
         this.traduction = traduction;
         this.type = type;
         this.regularExpresion = regularExpresion;
@@ -31,16 +32,8 @@ public class Token {
         return traduction;
     }
 
-    public void setTraduction(String traduction) {
-        this.traduction = traduction;
-    }
-
     public Language getLanguage() {
         return language;
-    }
-
-    public void setLanguage(Language language) {
-        this.language = language;
     }
 
     public String getToken() {
@@ -60,7 +53,7 @@ public class Token {
     }
     
     public boolean isIgnored(){
-        return type.equals(TokenType.IGNORE);
+        return type.equals(TokenType.JUMP_LINE) || type.equals(TokenType.WHITE_SPACE);
     }
 
 }

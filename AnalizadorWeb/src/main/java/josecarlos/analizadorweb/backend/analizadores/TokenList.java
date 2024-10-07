@@ -19,24 +19,52 @@ public class TokenList {
     private List<TokenError> tokensError;
     private List<Integer> removedLines;
 
+    private List<Token> tokensHtml;
+    private List<Token> tokensJs;
+    private List<Token> tokensCss;
+    
     private StringBuilder codeHtml;
     private StringBuilder codeJs;
     private StringBuilder codeCss;
 
     public TokenList() {
         this.tokens = new ArrayList<>();
+        this.tokensHtml = new ArrayList<>();
+        this.tokensJs = new ArrayList<>();
+        this.tokensCss = new ArrayList<>();
         this.tokensError = new ArrayList<>();
         this.removedLines = new ArrayList<>();
+        this.line = 1;
+        this.column = 1;
     }
 
     public void addToken(Token token) {
-        if (token.isIgnored()) {
-
+        if (token.getType().equals(TokenType.JUMP_LINE)) {
+            nextLine();
+            this.column = 1;
+        } else {
+            nextColumn();
         }
+        
+        if (token.getType().equals(TokenType.COMMENT)) {
+            this.removedLines.add(line);
+        }
+        token.SetLocation(line, column);
+        tokens.add(token);
+        addToCorrectLanguage(token);
     }
     
-    public void addErrorToken(TokenError token){
-        
+    private void addToCorrectLanguage(Token token){
+        switch (token.getLanguage()) {
+            case html -> tokensHtml.add(token);
+            case css -> tokensCss.add(token);
+            case js -> tokensJs.add(token);
+            default -> {}
+        }
+    }
+
+    public void addErrorToken(TokenError token) {
+        tokensError.add(token);
     }
 
     public List<Token> getTokens() {

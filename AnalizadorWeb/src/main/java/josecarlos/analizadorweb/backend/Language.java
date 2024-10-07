@@ -8,7 +8,8 @@ public enum Language {
     html("HTML"),
     js("Javascript"),
     css("CSS"),
-    NO_ESPECIFIED("no_especificado");
+    STATE(""),
+    NO_SPECIFIED("no_especificado");
     
     private final String languageType;
     public static final String TOKEN_TYPE = "Estado";

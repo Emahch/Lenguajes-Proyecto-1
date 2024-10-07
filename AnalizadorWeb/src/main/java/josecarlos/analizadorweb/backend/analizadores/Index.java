@@ -6,10 +6,23 @@ package josecarlos.analizadorweb.backend.analizadores;
  */
 public class Index {
     private int index;
+    private int bookmark;
 
     public Index() {
     }
 
+    public void setBookmark() {
+        this.bookmark = get();
+    }
+
+    public void back() {
+        if (bookmark < 0) {
+            return;
+        }
+        set(bookmark);
+        this.bookmark = -1;
+    }
+    
     public int get() {
         return index;
     }

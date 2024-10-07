@@ -1,9 +1,5 @@
 package josecarlos.analizadorweb.backend.analizadores;
 
-import java.util.List;
-import java.util.Optional;
-import josecarlos.analizadorweb.backend.tokens.Token;
-
 /**
  *
  * @author emahch
@@ -11,36 +7,22 @@ import josecarlos.analizadorweb.backend.tokens.Token;
 public abstract class Analizer {
 
     protected String inputText;
-    protected int currentIndex;
-    protected int currentLine;
-    protected int currentColumn;
+    protected Index currentIndex;
+    protected TokenList tokenList;
 
-    public Analizer(String inputText) {
+    public Analizer(String inputText, Index currentIndex, TokenList tokenList) {
         this.inputText = inputText;
+        this.currentIndex = currentIndex;
+        this.tokenList = tokenList;
     }
 
     protected char charActual() {
-        if (currentIndex >= inputText.length()) {
+        if (currentIndex.get() >= inputText.length()) {
             return '\0';  // Fin de la cadena
         }
-        return inputText.charAt(currentIndex);
+        return inputText.charAt(currentIndex.get());
     }
 
-    protected void nextLine() {
-        currentIndex++;
-        currentLine++;
-        currentColumn = 0;
-    }
-
-    protected void next() {
-        currentIndex++;
-        currentColumn++;
-    }
-
-    public abstract Optional<Token> analize(int currentIndex);
-
-    public int getCurrentIndex() {
-        return currentIndex;
-    }
+    public abstract void analize();
 
 }

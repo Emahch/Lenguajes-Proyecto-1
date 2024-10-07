@@ -6,7 +6,8 @@ package josecarlos.analizadorweb.backend.html.tokens;
  */
 public enum TokenType {
     STATE("Estado"),
-    IGNORE(""),
+    JUMP_LINE("Salto linea"),
+    WHITE_SPACE("Espacio en blanco"),
     TAG("Etiqueta"),
     TAG_LINE("Etiqueta de una sola linea"),
     RESERVED_HTML("Palabra reservada HTML"),
@@ -14,7 +15,8 @@ public enum TokenType {
     DATA_TEXT("Texto HTML"),
     Etiqueta_de_Apertura("<"),
     Etiqueta_de_Cierre("<"),
-    Cierre_Etiqueta("/");
+    Cierre_Etiqueta("/"),
+    COMMENT("Comentario");
     
     
     private final String tokenName;

@@ -9,12 +9,12 @@ import josecarlos.analizadorweb.backend.tokens.Token;
  */
 class JsAnalizer extends Analizer{
 
-    public JsAnalizer(String inputText) {
-        super(inputText);
+    public JsAnalizer(String inputText, Index currentIndex, TokenList tokenList) {
+        super(inputText,currentIndex, tokenList);
     }
 
     @Override
-    public Optional<Token> analize(int currentIndex) {
+    public void analize() {
     }
     
 }
