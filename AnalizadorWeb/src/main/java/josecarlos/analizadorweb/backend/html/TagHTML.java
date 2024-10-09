@@ -1,4 +1,4 @@
-package josecarlos.analizadorweb.backend.html.tokens;
+package josecarlos.analizadorweb.backend.html;
 
 /**
  *
@@ -23,14 +23,13 @@ public enum TagHTML {
     boton("button"),
     piepagina("footer");
     
-    private final String value;
-    public static final String TOKEN_TYPE = "Etiqueta";
+    private final String traduction;
     
     private TagHTML(String value){
-        this.value = value;
+        this.traduction = value;
     }
 
-    public String getValue() {
-        return value;
+    public String getTraduction() {
+        return traduction;
     }
 }

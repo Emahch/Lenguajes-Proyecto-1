@@ -1,8 +1,8 @@
-package josecarlos.analizadorweb.backend.analizadores;
+package josecarlos.analizadorweb.backend.analizadores.utilities;
 
 import java.util.ArrayList;
 import java.util.List;
-import josecarlos.analizadorweb.backend.html.tokens.TokenType;
+import josecarlos.analizadorweb.backend.html.TokenType;
 import josecarlos.analizadorweb.backend.tokens.Token;
 import josecarlos.analizadorweb.backend.tokens.TokenError;
 
@@ -35,22 +35,24 @@ public class TokenList {
         this.tokensError = new ArrayList<>();
         this.removedLines = new ArrayList<>();
         this.line = 1;
-        this.column = 1;
+        this.column = 0;
     }
 
     public void addToken(Token token) {
-        if (token.getType().equals(TokenType.JUMP_LINE)) {
-            nextLine();
-            this.column = 1;
+        if (token.getType().equals(TokenType.JUMP_LINE) || token.getType().equals(TokenType.WHITE_SPACE)) {
+            if (token.getType().equals(TokenType.JUMP_LINE)) {
+                nextLine();
+                this.column = 0;
+            }
         } else {
             nextColumn();
+            token.SetLocation(line, column);
+            tokens.add(token);
         }
         
         if (token.getType().equals(TokenType.COMMENT)) {
             this.removedLines.add(line);
         }
-        token.SetLocation(line, column);
-        tokens.add(token);
         addToCorrectLanguage(token);
     }
     

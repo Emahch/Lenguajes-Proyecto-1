@@ -1,4 +1,4 @@
-package josecarlos.analizadorweb.backend.analizadores;
+package josecarlos.analizadorweb.backend.analizadores.utilities;
 
 /**
  *

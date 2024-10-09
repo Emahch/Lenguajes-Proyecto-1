@@ -1,8 +1,9 @@
 package josecarlos.analizadorweb.backend.tokens;
 
 import java.awt.Point;
+import java.util.Optional;
 import josecarlos.analizadorweb.backend.Language;
-import josecarlos.analizadorweb.backend.html.tokens.TokenType;
+import josecarlos.analizadorweb.backend.html.TokenType;
 
 /**
  *
@@ -15,6 +16,8 @@ public class Token {
     private Language language;
     private String regularExpresion;
     private Point location;
+    private boolean errorToken;
+    private Language originalLanguage;
 
     public Token(String token, String traduction, TokenType type, String regularExpresion, Language language) {
         this.token = token;
@@ -22,6 +25,7 @@ public class Token {
         this.traduction = traduction;
         this.type = type;
         this.regularExpresion = regularExpresion;
+        this.errorToken = false;
     }
     
     public void SetLocation(int line, int column){
@@ -48,8 +52,11 @@ public class Token {
         return regularExpresion;
     }
 
-    public Point getLocation() {
-        return location;
+    public Optional<Point> getLocation() {
+        if (location == null) {
+            return Optional.empty();
+        }
+        return Optional.of(location);
     }
     
     public boolean isIgnored(){

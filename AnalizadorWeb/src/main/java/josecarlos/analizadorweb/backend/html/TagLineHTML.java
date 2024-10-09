@@ -1,4 +1,4 @@
-package josecarlos.analizadorweb.backend.html.tokens;
+package josecarlos.analizadorweb.backend.html;
 
 /**
  *
@@ -14,15 +14,14 @@ public enum TagLineHTML {
     entrada("input"),
     area("textarea");
     
-    private final String traduccion;
-    public static final String TOKEN_TYPE = "Etiqueta de una linea";
+    private final String traduction;
     
     private TagLineHTML(String traduccion){
-        this.traduccion = traduccion;
+        this.traduction = traduccion;
     }
 
-    public String getTraduccion() {
-        return traduccion;
+    public String getTraduction() {
+        return traduction;
     }
     
 }

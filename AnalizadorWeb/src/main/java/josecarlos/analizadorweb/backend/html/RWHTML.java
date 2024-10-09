@@ -1,4 +1,4 @@
-package josecarlos.analizadorweb.backend.html.tokens;
+package josecarlos.analizadorweb.backend.html;
 
 import java.util.Optional;
 
@@ -6,7 +6,7 @@ import java.util.Optional;
  *
  * @author emahch
  */
-public enum PRHTML {
+public enum RWHTML {
     CLASS("class"),
     equal("="),
     HREF("href"),
@@ -19,9 +19,8 @@ public enum PRHTML {
     NAME("name");
     
     private final String reservedWord;
-    public static final String TOKEN_TYPE = "Palabra Reservada";
     
-    private PRHTML(String reservedWord){
+    private RWHTML(String reservedWord){
         this.reservedWord = reservedWord;
     }
 
@@ -29,11 +28,11 @@ public enum PRHTML {
         return reservedWord;
     }
     
-    public Optional<String> getValue(String text){
-            PRHTML[] valores = PRHTML.values();
-            for (PRHTML valor : valores) {
+    public static Optional<RWHTML> getValue(String text){
+            RWHTML[] valores = RWHTML.values();
+            for (RWHTML valor : valores) {
                 if (text != null && valor.getReservedWord().equals(text)) {
-                    return Optional.of(valor.getReservedWord());
+                    return Optional.of(valor);
                 }
             }
             return Optional.empty();

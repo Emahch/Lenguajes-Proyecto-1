@@ -1,8 +1,10 @@
 package josecarlos.analizadorweb.backend.analizadores;
 
+import josecarlos.analizadorweb.backend.analizadores.utilities.TokenList;
+import josecarlos.analizadorweb.backend.analizadores.utilities.Index;
 import java.util.Optional;
 import josecarlos.analizadorweb.backend.Language;
-import josecarlos.analizadorweb.backend.html.tokens.TokenType;
+import josecarlos.analizadorweb.backend.html.TokenType;
 import josecarlos.analizadorweb.backend.tokens.Token;
 
 /**
@@ -11,15 +13,14 @@ import josecarlos.analizadorweb.backend.tokens.Token;
  */
 public class StateAnalizer extends Analizer {
 
-    private TokenList tokens;
     private Language currentLanguage;
 
     public StateAnalizer(String inputText, Index currentIndex, TokenList tokenList) {
-        super(inputText,currentIndex, tokenList);
+        super(inputText, currentIndex, tokenList);
     }
 
     @Override
-    public void analize() {
+    public boolean analize() {
         currentIndex.setBookmark();
         StringBuilder identifier = new StringBuilder();
         char currentChar = charActual();
@@ -34,8 +35,9 @@ public class StateAnalizer extends Analizer {
             if (currentChar == '[') {
                 identifier.append(currentChar);
                 currentIndex.next();
-                Optional<Language> posibleNewLanguage = getLanguageIdentifier(identifier);
+                Optional<Language> posibleNewLanguage = getLanguageIdentifier();
                 if (posibleNewLanguage.isPresent()) {
+                    identifier.append(posibleNewLanguage.get().name());
                     currentChar = charActual();
                     if (currentChar == ']') {
                         identifier.append(currentChar);
@@ -48,23 +50,23 @@ public class StateAnalizer extends Analizer {
                                 ">>[" + currentLanguage.name() + "]",
                                 Language.STATE
                         );
-                        tokens.addToken(tokenLanguage);
+                        tokenList.addToken(tokenLanguage);
+                        return true;
                     }
                 }
             }
         }
         currentIndex.back();
+        return false;
     }
-    
-    private Optional<Language> getLanguageIdentifier(StringBuilder identifier) {
+
+    private Optional<Language> getLanguageIdentifier() {
         char currentChar = charActual();
+        StringBuilder identifier = new StringBuilder();
         while (Character.isLetter(currentChar)) {
             identifier.append(currentChar);
             currentIndex.next();
             currentChar = charActual();
-        }
-        if (identifier.isEmpty()) {
-            return Optional.empty();
         }
 
         Language language;

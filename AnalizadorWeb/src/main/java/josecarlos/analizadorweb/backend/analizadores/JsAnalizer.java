@@ -1,20 +1,23 @@
 package josecarlos.analizadorweb.backend.analizadores;
 
-import java.util.Optional;
-import josecarlos.analizadorweb.backend.tokens.Token;
+import josecarlos.analizadorweb.backend.analizadores.Analizer;
+import josecarlos.analizadorweb.backend.analizadores.utilities.*;
+import josecarlos.analizadorweb.backend.analizadores.utilities.Index;
+import josecarlos.analizadorweb.backend.analizadores.utilities.TokenList;
 
 /**
  *
  * @author emahch
  */
-class JsAnalizer extends Analizer{
+public class JsAnalizer extends Analizer{
 
     public JsAnalizer(String inputText, Index currentIndex, TokenList tokenList) {
         super(inputText,currentIndex, tokenList);
     }
 
     @Override
-    public void analize() {
+    public boolean analize() {
+        return false;
     }
     
 }
