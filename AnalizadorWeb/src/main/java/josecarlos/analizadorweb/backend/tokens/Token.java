@@ -3,7 +3,6 @@ package josecarlos.analizadorweb.backend.tokens;
 import java.awt.Point;
 import java.util.Optional;
 import josecarlos.analizadorweb.backend.Language;
-import josecarlos.analizadorweb.backend.html.TokenType;
 
 /**
  *

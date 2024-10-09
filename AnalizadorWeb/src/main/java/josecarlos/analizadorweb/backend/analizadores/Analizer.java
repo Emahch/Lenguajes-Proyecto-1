@@ -43,19 +43,19 @@ public abstract class Analizer {
         return stringBuilder.toString();
     }
 
-    protected String getStringChar() {
+    protected String getStringChar(char caracter) {
         StringBuilder stringBuilder = new StringBuilder();
         char currentChar = charActual();
         stringBuilder.append(currentChar);
         currentIndex.next();
         currentChar = charActual();
 
-        while (currentChar != '"' && currentChar != '\0') {
+        while (currentChar != caracter && currentChar != '\0') {
             stringBuilder.append(currentChar);
             currentIndex.next();
             currentChar = charActual();
         }
-        if (currentChar == '"') {
+        if (currentChar == caracter) {
             stringBuilder.append(currentChar);
             currentIndex.next();
         }

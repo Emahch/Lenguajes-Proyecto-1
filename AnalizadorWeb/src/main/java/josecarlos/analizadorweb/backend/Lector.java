@@ -1,10 +1,11 @@
 package josecarlos.analizadorweb.backend;
 
+import java.util.ArrayList;
 import java.util.List;
 import josecarlos.analizadorweb.backend.analizadores.*;
 import josecarlos.analizadorweb.backend.analizadores.utilities.Index;
 import josecarlos.analizadorweb.backend.analizadores.utilities.TokenList;
-import josecarlos.analizadorweb.backend.html.TokenType;
+import josecarlos.analizadorweb.backend.tokens.TokenType;
 import josecarlos.analizadorweb.backend.tokens.Token;
 
 /**
@@ -50,10 +51,16 @@ public class Lector {
      */
     public TokenList generarTokens() {
         while (currentIndex.get() < inputText.length()) {
+            List<Token> tokens;
             char currentChar = charActual();
 
             if (currentChar == '>') {
-                if (stateAnalizer.analize()) {
+                tokens = stateAnalizer.analize();
+                if (tokens != null) {
+                    for (Token token : tokens) {
+                        tokenList.addToken(token);
+                    }
+                    tokens.clear();
                     currentLanguage = stateAnalizer.getCurrentLanguage();
                     changeActiveAnalizer();
                 }
@@ -71,8 +78,8 @@ public class Lector {
                     tokenList.addToken(token);
                     currentIndex.next();
                 } else {
-                    List<Token> tokens = currentAnalizer.analize();
-                    if (tokens == null) {
+                    tokens = currentAnalizer.analize();
+                    if (tokens == null || tokens.isEmpty()) {
                         analizeError();
                     } else {
                         for (Token token : tokens) {
@@ -81,7 +88,6 @@ public class Lector {
                     }
                 }
             } else {
-                System.out.println("No language specified");
                 currentIndex.next();
             }
         }
@@ -148,7 +154,8 @@ public class Lector {
     }
 
     private void analizeError() {
+        char currentChar = charActual();
         currentIndex.next();
-        System.out.println("Error");
+        System.out.println("Error en" + currentChar);
     }
 }

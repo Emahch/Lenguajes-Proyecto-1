@@ -58,7 +58,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         textoEntrada.setColumns(20);
         textoEntrada.setFont(new java.awt.Font("Liberation Sans", 0, 16)); // NOI18N
         textoEntrada.setRows(5);
-        textoEntrada.setText(">>[html]\n<contenedor id=\"showcase\">\n<contenedor class=\"container\">\n<titulo1>Bienvenido a Mi Página<titulo1/>\n<parrafo>Explora nuestro contenido y conoce más sobre\nnosotros.<parrafo/>\n//END\n<contenedor/>\n<contenedor/>");
+        textoEntrada.setText(">>[html]\n<contenedor id=\"showcase\">\n<contenedor class=\"container\">\n<titulo1>Bienvenido a Mi Página<titulo1/>\n<parrafo>Explora nuestro contenido y conoce más sobre\nnosotros.<parrafo/>\n//END\n<contenedor/>\n<contenedor/>\n>>[css]\nbody {\nfont-family: 'Arial', sans-serif;\nmargin: 0;\npadding: 0;\nbackground-color: #f4f4f4;\ncolor: #333;\n}\n");
         textoEntrada.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
                 textoEntradaCaretPositionChanged(evt);

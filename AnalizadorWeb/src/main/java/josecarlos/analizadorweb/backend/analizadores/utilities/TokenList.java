@@ -2,7 +2,7 @@ package josecarlos.analizadorweb.backend.analizadores.utilities;
 
 import java.util.ArrayList;
 import java.util.List;
-import josecarlos.analizadorweb.backend.html.TokenType;
+import josecarlos.analizadorweb.backend.tokens.TokenType;
 import josecarlos.analizadorweb.backend.tokens.Token;
 import josecarlos.analizadorweb.backend.tokens.TokenError;
 

@@ -1,4 +1,4 @@
-package josecarlos.analizadorweb.backend.html;
+package josecarlos.analizadorweb.backend.tokens;
 
 /**
  *
@@ -20,13 +20,24 @@ public enum TokenType {
     SELECTOR_U("Selector universal"),
     SELECTOR_ID("Selector de Id"),
     SELECTOR_TAG("Selector etiqueta"),
+    SELECTOR_IDENTIFIER("Identificador de selector"),
     SELECTOR_CLASS("Selector de clase"),
     COMBINATOR("Combinadores"),
     RULE("Regla css"),
     OTHERS_CSS("Otros css"),
-    STRING("Cadena de caracteres css"),
+    STRING_CSS("Cadena de caracteres css"),
     COLOR("Color"),
-    IDENTIFIER("Identificador");
+    IDENTIFIER("Identificador"),
+    INTEGER("Numero entero"),
+    DECIMAL("Numero decimal"),
+    STRING_JS("Cadena de caracteres Js"),
+    DATO_BOOLEANO("Dato booleano"),
+    OPERATOR_AR("Operador Aritmetico"),
+    OPERATOR_RE("Operador Relacional"),
+    OPERATOR_LO("Operador Lógico"),
+    OPERATOR_IN("Operador Incremental"),
+    RESERVED_JS("Palabra reservada Js"),
+    SIMBOLO("Simbolo");
     
     
     private final String tokenName;

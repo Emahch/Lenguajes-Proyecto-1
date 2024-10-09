@@ -122,7 +122,7 @@
               <Font name="Liberation Sans" size="16" style="0"/>
             </Property>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="&gt;&gt;[html]&#xa;&lt;contenedor id=&quot;showcase&quot;&gt;&#xa;&lt;contenedor class=&quot;container&quot;&gt;&#xa;&lt;titulo1&gt;Bienvenido a Mi P&#xe1;gina&lt;titulo1/&gt;&#xa;&lt;parrafo&gt;Explora nuestro contenido y conoce m&#xe1;s sobre&#xa;nosotros.&lt;parrafo/&gt;&#xa;//END&#xa;&lt;contenedor/&gt;&#xa;&lt;contenedor/&gt;"/>
+            <Property name="text" type="java.lang.String" value="&gt;&gt;[html]&#xa;&lt;contenedor id=&quot;showcase&quot;&gt;&#xa;&lt;contenedor class=&quot;container&quot;&gt;&#xa;&lt;titulo1&gt;Bienvenido a Mi P&#xe1;gina&lt;titulo1/&gt;&#xa;&lt;parrafo&gt;Explora nuestro contenido y conoce m&#xe1;s sobre&#xa;nosotros.&lt;parrafo/&gt;&#xa;//END&#xa;&lt;contenedor/&gt;&#xa;&lt;contenedor/&gt;&#xa;&gt;&gt;[css]&#xa;body {&#xa;font-family: &apos;Arial&apos;, sans-serif;&#xa;margin: 0;&#xa;padding: 0;&#xa;background-color: #f4f4f4;&#xa;color: #333;&#xa;}&#xa;"/>
           </Properties>
           <Events>
             <EventHandler event="caretPositionChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="textoEntradaCaretPositionChanged"/>

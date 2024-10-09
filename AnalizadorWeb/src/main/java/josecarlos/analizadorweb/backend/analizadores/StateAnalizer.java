@@ -1,10 +1,12 @@
 package josecarlos.analizadorweb.backend.analizadores;
 
+import josecarlos.analizadorweb.backend.tokens.TokenType;
+import java.util.ArrayList;
+import java.util.List;
 import josecarlos.analizadorweb.backend.analizadores.utilities.TokenList;
 import josecarlos.analizadorweb.backend.analizadores.utilities.Index;
 import java.util.Optional;
 import josecarlos.analizadorweb.backend.Language;
-import josecarlos.analizadorweb.backend.html.TokenType;
 import josecarlos.analizadorweb.backend.tokens.Token;
 
 /**
@@ -20,7 +22,8 @@ public class StateAnalizer extends Analizer {
     }
 
     @Override
-    public boolean analize() {
+    public List<Token> analize() {
+        List<Token> tokens = new ArrayList<>();
         currentIndex.setBookmark();
         StringBuilder identifier = new StringBuilder();
         char currentChar = charActual();
@@ -50,14 +53,14 @@ public class StateAnalizer extends Analizer {
                                 ">>[" + currentLanguage.name() + "]",
                                 Language.STATE
                         );
-                        tokenList.addToken(tokenLanguage);
-                        return true;
+                        tokens.add(tokenLanguage);
+                        return tokens;
                     }
                 }
             }
         }
         currentIndex.back();
-        return false;
+        return null;
     }
 
     private Optional<Language> getLanguageIdentifier() {

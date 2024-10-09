@@ -1,5 +1,6 @@
 package josecarlos.analizadorweb.backend.analizadores;
 
+import josecarlos.analizadorweb.backend.tokens.TokenType;
 import java.util.ArrayList;
 import java.util.List;
 import josecarlos.analizadorweb.backend.analizadores.utilities.*;
@@ -9,7 +10,6 @@ import josecarlos.analizadorweb.backend.html.RWHTML;
 import josecarlos.analizadorweb.backend.html.StateHtml;
 import josecarlos.analizadorweb.backend.html.TagHTML;
 import josecarlos.analizadorweb.backend.html.TagLineHTML;
-import josecarlos.analizadorweb.backend.html.TokenType;
 import josecarlos.analizadorweb.backend.tokens.Token;
 
 /**
@@ -33,7 +33,11 @@ public class HtmlAnalizer extends Analizer {
             return analizeInTag();
         } else {
             if (currentChar == '<') {
-                return verifyTag();
+                List<Token> list = verifyTag();
+                if (list != null) {
+                    state = StateHtml.IN_TAG;
+                }
+                return list;
             } else {
                 return verifyDataText();
             }
@@ -43,9 +47,17 @@ public class HtmlAnalizer extends Analizer {
     private List<Token> analizeInTag() {
         char currentChar = charActual();
         if (currentChar == '/') {
-            return verifyEndTag();
+            List<Token> list = verifyEndTag();
+            if (list != null) {
+                state = StateHtml.WAITING;
+            }
+            return list;
         } else if (currentChar == '>') {
-            return addCloseToken();
+            List<Token> list = addCloseToken();
+            if (list != null) {
+                state = StateHtml.WAITING;
+            }
+            return list;
         } else if (currentChar == '=') {
             return addEqualsToken();
         } else if (currentChar == '"') {
@@ -56,14 +68,14 @@ public class HtmlAnalizer extends Analizer {
         return null;
     }
 
-    private List<Token> verifyDataText(){
+    private List<Token> verifyDataText() {
         List<Token> tokens = new ArrayList<>();
         String text = getDataText();
         Token openToken = new Token(text, text, TokenType.DATA_TEXT_HTML, "[a-zA-Z]|[0-9]|[.]", Language.html);
         tokens.add(openToken);
         return tokens;
     }
-    
+
     private List<Token> verifyTag() {
         List<Token> tokens = new ArrayList<>();
         // Creando token de apertura
@@ -82,13 +94,14 @@ public class HtmlAnalizer extends Analizer {
             currentIndex.back();
             return null;
         }
-        
+
         if (endTag) {
             Token openToken = new Token("<", "<", TokenType.Etiqueta_de_Cierre, "<", Language.html);
             tokens.add(openToken);
             Token endToken = new Token("/", "/", TokenType.Cierre_Etiqueta, "/", Language.html);
             tokens.add(endToken);
             tokens.add(posibleTokenTag.get());
+            return tokens;
         }
         Token openToken = new Token("<", "<", TokenType.Etiqueta_de_Apertura, "<", Language.html);
         tokens.add(openToken);
@@ -109,7 +122,6 @@ public class HtmlAnalizer extends Analizer {
                 tokens.add(tokenClose);
                 tokens.add(tokenEnd);
                 currentIndex.next();
-                state = StateHtml.WAITING;
                 return tokens;
             }
         }
@@ -123,7 +135,6 @@ public class HtmlAnalizer extends Analizer {
         if (currentChar == '>') {
             Token tokenEnd = new Token(">", ">", TokenType.Etiqueta_de_Cierre, ">", Language.html);
             tokens.add(tokenEnd);
-            state = StateHtml.WAITING;
             currentIndex.next();
             return tokens;
         }
@@ -145,7 +156,6 @@ public class HtmlAnalizer extends Analizer {
                 return Optional.empty();
             }
         }
-        state = StateHtml.IN_TAG;
         return Optional.of(tokenTag);
     }
 
@@ -182,9 +192,9 @@ public class HtmlAnalizer extends Analizer {
 
     private List<Token> verifyString() {
         List<Token> tokens = new ArrayList<>();
-        String charString = getStringChar();
+        String charString = getStringChar('"');
         Token token = new Token(charString, charString,
-                TokenType.DATA_STRING_HTML, "[a-zA-Z]|[0-9]|[.]", Language.html);
+                TokenType.DATA_STRING_HTML, "\"[a-zA-Z]|[0-9]|[.]\"", Language.html);
         tokens.add(token);
         return tokens;
     }
