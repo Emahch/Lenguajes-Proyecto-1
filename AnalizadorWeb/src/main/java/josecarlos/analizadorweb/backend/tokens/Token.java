@@ -26,6 +26,10 @@ public class Token {
         this.regularExpresion = regularExpresion;
         this.errorToken = false;
     }
+
+    public void setOriginalLanguage(Language originalLanguage) {
+        this.originalLanguage = originalLanguage;
+    }
     
     public void SetLocation(int line, int column){
         this.location = new Point(column, line);

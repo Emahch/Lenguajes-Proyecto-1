@@ -80,7 +80,8 @@ public class Lector {
                 } else {
                     tokens = currentAnalizer.analize();
                     if (tokens == null || tokens.isEmpty()) {
-                        analizeError();
+                        currentChar = charActual();
+                        tokenList.addErrorToken(currentChar, currentLanguage);
                     } else {
                         for (Token token : tokens) {
                             tokenList.addToken(token);
@@ -101,6 +102,7 @@ public class Lector {
 
         while (currentChar == '\n' || Character.isWhitespace(currentChar)) {
             currentIndex.next();
+            currentChar = charActual();
             if (currentChar == '\n') {
                 doubleJump = true;
             }
@@ -152,10 +154,20 @@ public class Lector {
         return false;
 
     }
-
-    private void analizeError() {
-        char currentChar = charActual();
-        currentIndex.next();
-        System.out.println("Error en" + currentChar);
+    
+    public String getHtml(){
+        return this.tokenList.generateHtml();
+    }
+    
+    public String getTokenReport(){
+        return this.tokenList.generateReport();
+    }
+    
+    public String getErrorReport(){
+        return this.tokenList.generateErrorReport();
+    }
+    
+    public String getOptimizationReport(){
+        return this.tokenList.generateOptimizationReport();
     }
 }

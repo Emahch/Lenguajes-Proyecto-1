@@ -3,8 +3,10 @@ package josecarlos.analizadorweb.archivos;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
@@ -26,17 +28,27 @@ public class ExportFile {
     /**
      * Metodo que permite seleccionar la ubicación y el nombre de donde se desea guardar el archivo
      * 
+     * @return 
      */
-    public void selectPath() {
+    public boolean selectPath(String pathName) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setMultiSelectionEnabled(false);
-        fileChooser.setSelectedFile(new File("Analizador.html"));
+        fileChooser.setSelectedFile(new File(pathName));
 
         int opcion = fileChooser.showSaveDialog(new JFrame());
 
         if (opcion == JFileChooser.APPROVE_OPTION) {
             archivoSeleccionado = fileChooser.getSelectedFile();
-            System.out.println(archivoSeleccionado.getAbsolutePath());
+        }
+        return opcion == JFileChooser.APPROVE_OPTION;
+    }
+    
+    public void writeFile(String texto){
+        try (FileWriter fw = new FileWriter(archivoSeleccionado);
+                BufferedWriter bf = new BufferedWriter(fw)) {
+            bf.write(texto);
+            bf.flush();
+        } catch (Exception e) {
         }
     }
 

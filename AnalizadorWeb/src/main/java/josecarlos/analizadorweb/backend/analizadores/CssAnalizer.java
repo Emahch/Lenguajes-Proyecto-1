@@ -43,7 +43,7 @@ public class CssAnalizer extends Analizer {
             }
         }
     }
-
+    
     private List<Token> analizeBeforeSelector() {
         char currentChar = charActual();
         List<Token> list = null;
@@ -110,12 +110,12 @@ public class CssAnalizer extends Analizer {
     private List<Token> verifyInteger() {
         List<Token> tokens = new ArrayList<>();
         StringBuilder stringBuilder = new StringBuilder();
-        currentIndex.setBookmark();
+        index.setBookmark();
         char currentChar = charActual();
         
         while (Character.isDigit(currentChar)) {
             stringBuilder.append(currentChar);
-            currentIndex.next();
+            index.next();
             currentChar = charActual();
         }
         
@@ -128,12 +128,12 @@ public class CssAnalizer extends Analizer {
     private List<Token> verifyOther() {
         List<Token> tokens = new ArrayList<>();
         StringBuilder stringBuilder = new StringBuilder();
-        currentIndex.setBookmark();
+        index.setBookmark();
         char currentChar = charActual();
         
         while (!Character.isWhitespace(currentChar) && currentChar != '\0') {
             stringBuilder.append(currentChar);
-            currentIndex.next();
+            index.next();
             currentChar = charActual();
         }
         
@@ -145,14 +145,14 @@ public class CssAnalizer extends Analizer {
             return tokens;
         }
         
-        currentIndex.back();
+        index.back();
         return null;
     }
     
     private List<Token> verifyIdentifierOrRuleOrOther() {
         List<Token> tokens = new ArrayList<>();
         StringBuilder stringBuilder = new StringBuilder();
-        currentIndex.setBookmark();
+        index.setBookmark();
         char currentChar = charActual();
         boolean isPosibleIdentifier = false;
         if (Character.isLetter(currentChar) && Character.isLowerCase(currentChar)) {
@@ -161,7 +161,7 @@ public class CssAnalizer extends Analizer {
         
         while (Character.isLetterOrDigit(currentChar) || currentChar == '-') {
             stringBuilder.append(currentChar);
-            currentIndex.next();
+            index.next();
             currentChar = charActual();
         }
         
@@ -187,7 +187,7 @@ public class CssAnalizer extends Analizer {
             tokens.add(token);
             return tokens;
         }
-        currentIndex.back();
+        index.back();
         return null;
     }
 
@@ -195,16 +195,16 @@ public class CssAnalizer extends Analizer {
         List<Token> tokens = new ArrayList<>();
         StringBuilder stringBuilder = new StringBuilder();
         char currentChar = charActual();
-        currentIndex.setBookmark();
+        index.setBookmark();
         stringBuilder.append(currentChar);
-        currentIndex.next();
+        index.next();
 
         int countChar = 0;
         currentChar = charActual();
         while (Character.isLetterOrDigit(currentChar)) {
             countChar++;
             stringBuilder.append(currentChar);
-            currentIndex.next();
+            index.next();
             currentChar = charActual();
         }
 
@@ -214,7 +214,7 @@ public class CssAnalizer extends Analizer {
             tokens.add(token);
             return tokens;
         }
-        currentIndex.back();
+        index.back();
         return null;
     }
 
@@ -267,7 +267,7 @@ public class CssAnalizer extends Analizer {
                 return null;
             }
         }
-        currentIndex.next();
+        index.next();
         tokens.add(token);
         return tokens;
     }
@@ -278,7 +278,7 @@ public class CssAnalizer extends Analizer {
         if (currentChar == '*') {
             Token token = new Token("*", "*", TokenType.SELECTOR_U, "*", Language.css);
             tokens.add(token);
-            currentIndex.next();
+            index.next();
             return tokens;
         }
         return null;
@@ -290,7 +290,7 @@ public class CssAnalizer extends Analizer {
         if (currentChar == '{') {
             Token token = new Token("{", "{", TokenType.OTHERS_CSS, "{", Language.css);
             tokens.add(token);
-            currentIndex.next();
+            index.next();
             return tokens;
         }
         return null;
@@ -302,7 +302,7 @@ public class CssAnalizer extends Analizer {
         if (currentChar == '}') {
             Token token = new Token("}", "}", TokenType.OTHERS_CSS, "}", Language.css);
             tokens.add(token);
-            currentIndex.next();
+            index.next();
             return tokens;
         }
         return null;
@@ -310,13 +310,13 @@ public class CssAnalizer extends Analizer {
 
     private List<Token> verifyIdSelector() {
         List<Token> tokens = new ArrayList<>();
-        currentIndex.setBookmark();
+        index.setBookmark();
         Token tokenSelectorClass = new Token("#", "#", TokenType.SELECTOR_ID, "#", Language.css);
-        currentIndex.next();
+        index.next();
 
         Token tokenIdentifierSelector = getIdentifierSelector();
         if (tokenIdentifierSelector == null) {
-            currentIndex.back();
+            index.back();
             return null;
         }
         tokens.add(tokenSelectorClass);
@@ -326,13 +326,13 @@ public class CssAnalizer extends Analizer {
 
     private List<Token> verifyClassSelector() {
         List<Token> tokens = new ArrayList<>();
-        currentIndex.setBookmark();
+        index.setBookmark();
         Token tokenSelectorClass = new Token(".", ".", TokenType.SELECTOR_CLASS, ".", Language.css);
-        currentIndex.next();
+        index.next();
 
         Token tokenIdentifierSelector = getIdentifierSelector();
         if (tokenIdentifierSelector == null) {
-            currentIndex.back();
+            index.back();
             return null;
         }
         tokens.add(tokenSelectorClass);
@@ -345,12 +345,12 @@ public class CssAnalizer extends Analizer {
         char currentChar = charActual();
         if (Character.isLowerCase(currentChar) && Character.isLetter(currentChar)) {
             stringBuilder.append(currentChar);
-            currentIndex.next();
+            index.next();
             currentChar = charActual();
 
             while ((Character.isLowerCase(currentChar) && Character.isLetter(currentChar)) || Character.isDigit(currentChar) || currentChar == '-') {
                 stringBuilder.append(currentChar);
-                currentIndex.next();
+                index.next();
                 currentChar = charActual();
             }
             if (!Character.isLetter(currentChar)) {
@@ -363,7 +363,7 @@ public class CssAnalizer extends Analizer {
     }
 
     private List<Token> verifyTagSelector() {
-        currentIndex.setBookmark();
+        index.setBookmark();
         List<Token> tokens = new ArrayList<>();
         String text = getText();
         Token token;
@@ -372,11 +372,12 @@ public class CssAnalizer extends Analizer {
             TagCss selectorTag = TagCss.valueOf(text);
             token = new Token(text, selectorTag.name(), TokenType.SELECTOR_TAG, selectorTag.name(), Language.css);
         } catch (Exception e) {
-            currentIndex.back();
+            index.back();
             return null;
         }
 
         tokens.add(token);
         return tokens;
     }
+
 }

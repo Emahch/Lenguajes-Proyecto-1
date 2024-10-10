@@ -79,19 +79,19 @@ public class HtmlAnalizer extends Analizer {
     private List<Token> verifyTag() {
         List<Token> tokens = new ArrayList<>();
         // Creando token de apertura
-        currentIndex.setBookmark();
-        currentIndex.next();
+        index.setBookmark();
+        index.next();
         boolean endTag = false;
         char currentChar = charActual();
         if (currentChar == '/') {
-            currentIndex.next();
+            index.next();
             endTag = true;
         }
         String identifierTag = getText();
 
         Optional<Token> posibleTokenTag = getTokenTag(identifierTag);
         if (posibleTokenTag.isEmpty()) {
-            currentIndex.back();
+            index.back();
             return null;
         }
 
@@ -111,21 +111,21 @@ public class HtmlAnalizer extends Analizer {
 
     private List<Token> verifyEndTag() {
         List<Token> tokens = new ArrayList<>();
-        currentIndex.setBookmark();
+        index.setBookmark();
         char currentChar = charActual();
         if (currentChar == '/') {
             Token tokenClose = new Token("/", "/", TokenType.Cierre_Etiqueta, "/", Language.html);
-            currentIndex.next();
+            index.next();
             currentChar = charActual();
             if (currentChar == '>') {
                 Token tokenEnd = new Token(">", ">", TokenType.Etiqueta_de_Cierre, ">", Language.html);
                 tokens.add(tokenClose);
                 tokens.add(tokenEnd);
-                currentIndex.next();
+                index.next();
                 return tokens;
             }
         }
-        currentIndex.back();
+        index.back();
         return null;
     }
 
@@ -135,7 +135,7 @@ public class HtmlAnalizer extends Analizer {
         if (currentChar == '>') {
             Token tokenEnd = new Token(">", ">", TokenType.Etiqueta_de_Cierre, ">", Language.html);
             tokens.add(tokenEnd);
-            currentIndex.next();
+            index.next();
             return tokens;
         }
         return null;
@@ -161,12 +161,12 @@ public class HtmlAnalizer extends Analizer {
 
     private List<Token> verifyPR() {
         List<Token> tokens = new ArrayList<>();
-        currentIndex.setBookmark();
+        index.setBookmark();
         String reservedWord = getText();
 
         Optional<RWHTML> posibleReservedWord = RWHTML.getValue(reservedWord);
         if (posibleReservedWord.isEmpty()) {
-            currentIndex.back();
+            index.back();
             return null;
         }
 
@@ -181,7 +181,7 @@ public class HtmlAnalizer extends Analizer {
         List<Token> tokens = new ArrayList<>();
         char currentChar = charActual();
         if (currentChar == '=') {
-            currentIndex.next();
+            index.next();
             Token tokenEqual = new Token("=", "=",
                     TokenType.RESERVED_HTML, "=", Language.html);
             tokens.add(tokenEqual);

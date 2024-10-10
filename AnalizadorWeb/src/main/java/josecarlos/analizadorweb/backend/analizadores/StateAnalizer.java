@@ -24,27 +24,27 @@ public class StateAnalizer extends Analizer {
     @Override
     public List<Token> analize() {
         List<Token> tokens = new ArrayList<>();
-        currentIndex.setBookmark();
+        index.setBookmark();
         StringBuilder identifier = new StringBuilder();
         char currentChar = charActual();
         identifier.append(currentChar);
-        currentIndex.next();
+        index.next();
         currentChar = charActual();
 
         if (currentChar == '>') {
             identifier.append(currentChar);
-            currentIndex.next();
+            index.next();
             currentChar = charActual();
             if (currentChar == '[') {
                 identifier.append(currentChar);
-                currentIndex.next();
+                index.next();
                 Optional<Language> posibleNewLanguage = getLanguageIdentifier();
                 if (posibleNewLanguage.isPresent()) {
                     identifier.append(posibleNewLanguage.get().name());
                     currentChar = charActual();
                     if (currentChar == ']') {
                         identifier.append(currentChar);
-                        currentIndex.next();
+                        index.next();
                         currentLanguage = posibleNewLanguage.get();
                         Token tokenLanguage = new Token(
                                 identifier.toString(),
@@ -59,7 +59,7 @@ public class StateAnalizer extends Analizer {
                 }
             }
         }
-        currentIndex.back();
+        index.back();
         return null;
     }
 
@@ -68,7 +68,7 @@ public class StateAnalizer extends Analizer {
         StringBuilder identifier = new StringBuilder();
         while (Character.isLetter(currentChar)) {
             identifier.append(currentChar);
-            currentIndex.next();
+            index.next();
             currentChar = charActual();
         }
 

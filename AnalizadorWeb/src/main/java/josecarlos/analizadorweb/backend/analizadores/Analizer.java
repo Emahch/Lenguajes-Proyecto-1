@@ -10,33 +10,33 @@ import josecarlos.analizadorweb.backend.tokens.Token;
  * @author emahch
  */
 public abstract class Analizer {
-
-    protected String inputText;
-    protected Index currentIndex;
+    
+    protected final String inputText;
+    protected Index index;
     protected TokenList tokenList;
 
     public Analizer(String inputText, Index currentIndex, TokenList tokenList) {
         this.inputText = inputText;
-        this.currentIndex = currentIndex;
+        this.index = currentIndex;
         this.tokenList = tokenList;
     }
 
     protected char charActual() {
-        if (currentIndex.get() >= inputText.length()) {
+        if (index.get() >= inputText.length()) {
             return '\0';  // Fin de la cadena
         }
-        return inputText.charAt(currentIndex.get());
+        return inputText.charAt(index.get());
     }
 
     public abstract List<Token> analize();
-
+    
     protected String getText() {
         StringBuilder stringBuilder = new StringBuilder();
         char currentChar = charActual();
 
         while (Character.isLetterOrDigit(currentChar)) {
             stringBuilder.append(currentChar);
-            currentIndex.next();
+            index.next();
             currentChar = charActual();
         }
 
@@ -47,17 +47,17 @@ public abstract class Analizer {
         StringBuilder stringBuilder = new StringBuilder();
         char currentChar = charActual();
         stringBuilder.append(currentChar);
-        currentIndex.next();
+        index.next();
         currentChar = charActual();
 
         while (currentChar != caracter && currentChar != '\0') {
             stringBuilder.append(currentChar);
-            currentIndex.next();
+            index.next();
             currentChar = charActual();
         }
         if (currentChar == caracter) {
             stringBuilder.append(currentChar);
-            currentIndex.next();
+            index.next();
         }
 
         return stringBuilder.toString();
@@ -69,17 +69,17 @@ public abstract class Analizer {
 
         while (currentChar != '<' && currentChar != '\0' && currentChar != '/') {
             stringBuilder.append(currentChar);
-            currentIndex.next();
+            index.next();
             currentChar = charActual();
             if (currentChar == '/') {
-                currentIndex.setBookmark();
-                currentIndex.next();
+                index.setBookmark();
+                index.next();
                 currentChar = charActual();
             }
         }
         
         if (currentChar == '/') {
-            currentIndex.back();
+            index.back();
         }
 
         return stringBuilder.toString();

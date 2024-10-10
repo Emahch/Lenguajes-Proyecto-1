@@ -27,7 +27,8 @@ public enum OtherCss {
     RNG("'[A-Za-z]'"),
     OP("("),
     CP(")"),
-    OCB("{");
+    OCB("{"),
+    OCF("}");
 
     private final String traduction;
 

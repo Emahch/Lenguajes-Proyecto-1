@@ -3,6 +3,7 @@ package josecarlos.analizadorweb.frontend;
 import java.util.List;
 import java.util.Optional;
 import javax.swing.JFrame;
+import josecarlos.analizadorweb.archivos.ExportFile;
 import josecarlos.analizadorweb.backend.Lector;
 import josecarlos.analizadorweb.backend.analizadores.utilities.TokenList;
 import josecarlos.analizadorweb.backend.tokens.Token;
@@ -42,7 +43,6 @@ public class FramePrincipal extends javax.swing.JFrame {
         scrollPane = new javax.swing.JScrollPane();
         textoEntrada = new javax.swing.JTextArea();
         botonGenerarHTML = new javax.swing.JButton();
-        botonVerCodigoOptimizado = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         menuArchivo = new javax.swing.JMenu();
         itemLimpiar = new javax.swing.JMenuItem();
@@ -58,7 +58,6 @@ public class FramePrincipal extends javax.swing.JFrame {
         textoEntrada.setColumns(20);
         textoEntrada.setFont(new java.awt.Font("Liberation Sans", 0, 16)); // NOI18N
         textoEntrada.setRows(5);
-        textoEntrada.setText(">>[html]\n<contenedor id=\"showcase\">\n<contenedor class=\"container\">\n<titulo1>Bienvenido a Mi Página<titulo1/>\n<parrafo>Explora nuestro contenido y conoce más sobre\nnosotros.<parrafo/>\n//END\n<contenedor/>\n<contenedor/>\n>>[css]\nbody {\nfont-family: 'Arial', sans-serif;\nmargin: 0;\npadding: 0;\nbackground-color: #f4f4f4;\ncolor: #333;\n}\n");
         textoEntrada.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
                 textoEntradaCaretPositionChanged(evt);
@@ -74,8 +73,6 @@ public class FramePrincipal extends javax.swing.JFrame {
                 botonGenerarHTMLActionPerformed(evt);
             }
         });
-
-        botonVerCodigoOptimizado.setText("Ver código optimizado");
 
         menuArchivo.setText("Archivo");
 
@@ -124,23 +121,19 @@ public class FramePrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(90, 90, 90)
-                .addComponent(botonVerCodigoOptimizado, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 207, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(botonGenerarHTML, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(88, 88, 88))
-            .addComponent(scrollPane, javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(botonVerCodigoOptimizado)
-                    .addComponent(botonGenerarHTML))
-                .addGap(22, 22, 22))
+                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botonGenerarHTML)
+                .addContainerGap())
         );
 
         pack();
@@ -154,14 +147,13 @@ public class FramePrincipal extends javax.swing.JFrame {
         }
 
         lector = new Lector(textoEntrada.getText());
-        TokenList tokenList = lector.generarTokens();
-        List<Token> list = tokenList.getTokens();
-        for (Token token : list) {
-            System.out.println("-> " + token.getToken() + "; " + token.getType() + "; " + token.getLanguage());
-        }
+        lector.generarTokens();
 
-//        ExportFile exportFile = new ExportFile();
-//        exportFile.selectPath();
+        ExportFile exportFile = new ExportFile();
+        boolean isSelected = exportFile.selectPath("Analizador.html");
+        if (isSelected) {
+            exportFile.writeFile(lector.getHtml());
+        }
     }//GEN-LAST:event_botonGenerarHTMLActionPerformed
 
     private void itemLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemLimpiarActionPerformed
@@ -172,20 +164,40 @@ public class FramePrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_textoEntradaCaretPositionChanged
 
     private void itemTokenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemTokenActionPerformed
-        // TODO add your handling code here:
+        if (lector == null) {
+            return;
+        }
+        ExportFile exportFile = new ExportFile();
+        boolean isSelected = exportFile.selectPath("ReporteToken.html");
+        if (isSelected) {
+            exportFile.writeFile(lector.getTokenReport());
+        }
     }//GEN-LAST:event_itemTokenActionPerformed
 
     private void itemOptimizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemOptimizacionActionPerformed
-        // TODO add your handling code here:
+        if (lector == null) {
+            return;
+        }
+        ExportFile exportFile = new ExportFile();
+        boolean isSelected = exportFile.selectPath("ReporteOptimizacion.html");
+        if (isSelected) {
+            exportFile.writeFile(lector.getOptimizationReport());
+        }
     }//GEN-LAST:event_itemOptimizacionActionPerformed
 
     private void itemErroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemErroresActionPerformed
-        // TODO add your handling code here:
+        if (lector == null) {
+            return;
+        }
+        ExportFile exportFile = new ExportFile();
+        boolean isSelected = exportFile.selectPath("ReporteErrores.html");
+        if (isSelected) {
+            exportFile.writeFile(lector.getErrorReport());
+        }
     }//GEN-LAST:event_itemErroresActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonGenerarHTML;
-    private javax.swing.JButton botonVerCodigoOptimizado;
     private javax.swing.JMenuItem itemErrores;
     private javax.swing.JMenuItem itemLimpiar;
     private javax.swing.JMenuItem itemOptimizacion;

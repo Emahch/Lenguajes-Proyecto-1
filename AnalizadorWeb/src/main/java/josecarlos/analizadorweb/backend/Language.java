@@ -9,10 +9,9 @@ public enum Language {
     js("Javascript"),
     css("CSS"),
     STATE(""),
-    NO_SPECIFIED("no_especificado");
+    NO_SPECIFIED("");
     
     private final String languageType;
-    public static final String TOKEN_TYPE = "Estado";
     
     private Language(String name){
         this.languageType = name;

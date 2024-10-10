@@ -37,7 +37,8 @@ public enum TokenType {
     OPERATOR_LO("Operador Lógico"),
     OPERATOR_IN("Operador Incremental"),
     RESERVED_JS("Palabra reservada Js"),
-    SIMBOLO("Simbolo");
+    OTHERS_JS("Simbolo"),
+    ERROR("Error");
     
     
     private final String tokenName;
